@@ -1,17 +1,21 @@
 import tsp_heuristics as heur
+import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route
 
 def main():
-    point_list = generate_points(5, 0, 10)
+    point_list = generate_points(20, 0, 10)
     matrix = calculate_distance_matrix(point_list)
     print('Random Points: ', point_list)
     print()
     
     nn_solution = heur.nearest_neighbour(matrix)
-    print('Nearest Neighbour Solution:')
-    print_route(nn_solution, matrix )
+    opt_solution = opt.solve_optimal(matrix)
     
-
+    print('Nearest Neighbour Solution:')
+    print_route(nn_solution, matrix)
+    
+    print('Optimal Solution:')
+    print_route(opt_solution, matrix)
 
 def plot():
     points = generate_points(50, 0, 10)
