@@ -1,40 +1,39 @@
-import random
-
-import tsp_heuristics
+import tsp_heuristics as heur
+from lib import generate_points, calculate_distance_matrix, print_route
 
 def main():
-    # tsp_heuristics.nearest_neighbour
     point_list = generate_points(5, 0, 10)
-    distance_matrix = calculate_distance_matrix(point_list)
-    print('Points: ', point_list)
+    matrix = calculate_distance_matrix(point_list)
+    print('Random Points: ', point_list)
     print()
     
-    nn_solution = tsp_heuristics.nearest_neighbour(distance_matrix)
-    print('Nearest Neighbour:', nn_solution)
+    nn_solution = heur.nearest_neighbour(matrix)
+    print('Nearest Neighbour Solution:')
+    print_route(nn_solution, matrix )
+    
 
-def generate_points(number, min, max):
-    """generates `number` random points in a x,y field - limited by `min` and max"""
-    l = []
-    for i in range(number):
-        x = random.random()
-        y = random.random()
-        x = round((max-min) * x + min, 2)
-        y = round((max - min) * y + min, 2)
-        l.append((x,y))
-    return l
-    
-def calculate_distance_matrix(points):
-    """returns a distance matrix (euclidean distance).
-    points: a list of x,y tuples"""
-    n = len(points)
-    matrix = [[None for j in range(n)] for i in range(n)]
-    for i in range(n):
-        for j in range(n):
-            # calculate distance between point n and m
-            point_1 = points[i]
-            point_2 = points[j]
-            #matrix[i][j] = round(((point_1[0] - point_2[0])**2 + (point_1[1] - point_2[1])**2)**(1/2), 2)
-            matrix[i][j] = round(((point_1[0] - point_2[0])**2 + (point_1[1] - point_2[1])**2)**(1/2), 2)
-    return matrix
-    
-main()
+
+def plot():
+    points = generate_points(50, 0, 10)
+    distance_matrix = calculate_distance_matrix(points)
+    print_matrix(distance_matrix)
+    tsp_route = tsp_nearest_neighbour(distance_matrix)
+    # draw all points:
+    x_list = [x for x,y in points]
+    y_list = [y for x,y in points]
+    plt.plot(x_list, y_list, marker='o', linestyle='', color='green')
+
+    # draw nearest neighbour route:
+    tsp_x = [points[i][0] for i in tsp_route]
+    tsp_y = [points[i][1] for i in tsp_route]
+    plt.plot(tsp_x, tsp_y)
+
+    # draw the start point:
+    plt.plot( [tsp_x[0]], [tsp_y[0]], marker='o', alpha=1, linestyle='', color='red', markersize=15)
+    plt.ylim(-1, 11)
+    plt.xlim(-1, 11)
+    plt.grid()
+    plt.show()
+
+if __name__ == '__main__':
+    main()
