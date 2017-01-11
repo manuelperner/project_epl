@@ -10,6 +10,9 @@ def nearest_neighbour(matrix):
         all_routes.append(__nearest_neighbour_fixed_start(matrix, v))
     # return the best route of all:
     return min(all_routes, key=lambda route: calc_route_length(route, matrix))
+    
+def first_come_first_serve(matrix):
+    return list(range(len(matrix)))
      
 def nearest_insertion(matrix):
     raise NotImplementedError()
