@@ -9,7 +9,7 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route
 
 MIN_INSTANCE_SIZE = 3
-MAX_INSTANCE_SIZE = 25
+MAX_INSTANCE_SIZE = 4
 STEP = 1
 SIMULATIONS = 4
 
@@ -69,13 +69,13 @@ def plot(data):
     
     size = data['instance_size']
     ax1.plot(size, data['nearest_neighbour_time'], label='Nearest Neighbour time')
-    ax1.legend(loc=0)
+    ax1.legend(loc='upper left')
     ax1.set_xlabel('Instance size')
     ax1.set_ylabel('Time [s]')
     
     ax2 = ax1.twinx()
     ax2.plot(size, data['optimal_gurobi_time'], label='Solver time')
-    ax2.legend(loc=2)
+    ax2.legend(loc='upper right')
     ax2.set_ylabel('Time [s]')
     plt.show()
 
