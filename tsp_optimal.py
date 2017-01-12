@@ -107,7 +107,7 @@ def solve_optimal_gurobi(matrix):
     #model.write('gurobi.lp')
     model.optimize()
     if model.status == GRB.Status.OPTIMAL:
-        return __grb_rerieve_tour(model, x)
+        return __grb_retrieve_tour(model, x)
         
 def __retrieve_tour_from_array(array):
     def __find_next_city_in_line(line):
@@ -129,20 +129,15 @@ def __retrieve_tour_from_array(array):
     
 def __grb_retrieve_tour(model, x):
     """ gurobi helper function """
-    N = list(range(len(x)))
-    last_city = __find_next_city_in_line(x[0])
-    tour = [last_city]
-    while True:
-        next_city = __grb_find_next_city_in_line(x[last_city])
-        if next_city == tour[0]:
-            break
-        else:
-            tour.append(next_city)
-            last_city = next_city
-    return tour
+    # create a numpy array
+    array = np.empty((len(x), len(x)), dtype=int)
+    for i, line in enumerate(x):
+        for j, var in enumerate(line):
+            array[i,j] = int(var.X)
+    return __retrieve_tour_from_array(array)
 
 def __grb_find_next_city_in_line(line):
     """ gurobi helper function """
     for i, var in enumerate(line):
-        if int(var.X) == 1:
+        if var == 1:
             return i
