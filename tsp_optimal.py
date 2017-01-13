@@ -5,8 +5,7 @@ try:
 except:
     pass
 import numpy as np
-import lpsolve55
-from lpsolve55 import lpsolve, GE, LE, EQ
+from lpsolve55 import lpsolve, GE, LE, EQ, IMPORTANT
 
 class GurobiNotInstalledError(Exception):
     pass
@@ -31,7 +30,7 @@ def solve_optimal_lpsolve(matrix):
     
     lp = lpsolve('make_lp', 0, len(obj_factors))
     ret = lpsolve('set_lp_name', lp, 'tsp_model')
-    lpsolve('set_verbose', lp, lpsolve55.IMPORTANT)
+    lpsolve('set_verbose', lp, IMPORTANT)
     lpsolve('set_obj_fn', lp, obj_factors)
     # set var names:
     for num, (i,j) in enumerate(ij):
@@ -80,7 +79,8 @@ def solve_optimal_lpsolve(matrix):
 def __lps_retrieve_tour(vars):
     n = int(len(vars) ** (1/2))
     # reshape x:
-    x = np.reshape(np.array(vars), (n, n))
+    x = np.reshape(np.array(vars, dtype=int), (n, n))
+    return __retrieve_tour_from_array(x)
 
 def solve_optimal_gurobi(matrix):
     """
