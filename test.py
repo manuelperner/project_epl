@@ -5,8 +5,8 @@ def main():
     point_list = generate_points(5, 0, 10)
     matrix = calculate_distance_matrix(point_list)
     write_matrix_to_csv(matrix, 'matrix.csv')
-    #my_str = run_matlab_script('mst_heuristic.m')
-    #print(my_str)
+    my_str = run_matlab_script('mst_heuristic.m')
+    print(my_str)
     
 if __name__ == '__main__':
     main()
