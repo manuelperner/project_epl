@@ -5,6 +5,7 @@ try:
 except:
     pass
 import numpy as np
+import pulp
 from lpsolve55 import lpsolve, GE, LE, EQ, IMPORTANT
 
 class GurobiNotInstalledError(Exception):
@@ -81,6 +82,21 @@ def __lps_retrieve_tour(vars):
     # reshape x:
     x = np.reshape(np.array(vars, dtype=int), (n, n))
     return __retrieve_tour_from_array(x)
+    
+def solve_optimal_coin_pulp(matrix):
+    """
+    Solves a given tsp instance optimal using the python pulp interface to the coin solver.
+    
+    Returns a list of indices. The result list has a cardinality
+    of the length of the matrix.
+    """
+    n = len(matrix); N = list(range(len(matrix)))
+    prob = pulp.LpProblem('tsp_problem', pulp.LpMinimize)
+    # The problem variables are created
+    x = pulp.LpVariable.dicts("x",(N, N),0,1, pulp.LpInteger)
+    u = pulp.LpVariable.dicts("u",(N),0 ,n)
+    print(u)
+    print(x)
 
 def solve_optimal_gurobi(matrix):
     """

@@ -1,4 +1,10 @@
 import random
+import json
+#import shlex
+#from subprocess import Popen, PIPE
+import subprocess
+
+SETTINGS_FILE = 'settings.ini'
 
 def print_matrix(matrix):
     for line in matrix:
@@ -42,3 +48,46 @@ def generate_points(number, min, max):
         y = round((max - min) * y + min, 2)
         l.append((x,y))
     return l
+    
+def run_matlab_script(script_name):
+    """ Runs a matlab script, waits for its end and returns its output as string encoded"""
+    cmd = Settings.get('matlab-executable').replace('%script_name.m%', script_name)
+    outp = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+    outp = outp.decode('utf-8')
+    return outp
+    
+    
+class Settings:
+    __singleton = None
+    
+    def __init__(self):
+        assert Settings.__singleton == None
+        # load conf file
+        try:
+            self.read_settings_file()
+        except:
+            raise RuntimeError('Reading settings file failed')
+            
+    def read_settings_file(self):
+        self.data = {}
+        with open(SETTINGS_FILE) as f:
+            for line in f:
+                line = line.strip()
+                if line == '' or line.startswith('#'):
+                    continue
+                key, value = line.split('=')
+                self.data[key] = value
+            
+    @staticmethod
+    def __get_singleton():
+        if Settings.__singleton == None:
+            Settings.__singleton = Settings()
+        return Settings.__singleton
+        
+    @staticmethod
+    def get(key):
+        return Settings.__get_singleton().data.get(key)
+    
+    
+    
+    
