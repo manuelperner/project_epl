@@ -2,7 +2,7 @@
 matrix = csvread('matrix.csv');
 n = length(matrix);
 
-% Todo: Implement MST-Heuristik Baumalgorithmus
+% Todo: Implement Multi-Fragment
 
 % Return a random tour to python:
 tour = randperm(n) - 1;

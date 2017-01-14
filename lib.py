@@ -1,14 +1,19 @@
 import random
 import json
-#import shlex
-#from subprocess import Popen, PIPE
 import subprocess
+import csv
 
 SETTINGS_FILE = 'settings.ini'
 
 def print_matrix(matrix):
     for line in matrix:
         print(', '.join('{:5.2f}'.format(item) for item in line))
+        
+def write_matrix_to_csv(matrix, filename):
+    with open(filename, 'w') as csvfile:
+        for line in matrix:
+            line_str = ', '.join(map('{:.5f}'.format, line))
+            csvfile.write(line_str + '\n')
         
 def calculate_distance_matrix(points):
     """returns a distance matrix (euclidean distance).
