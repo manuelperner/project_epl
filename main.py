@@ -3,10 +3,11 @@ import numpy as np
 
 import tsp_heuristics as heur
 import tsp_optimal as opt
-from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length
+from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length, write_matrix_to_csv
 
 def main():
-    point_list = generate_points(30, 0, 10)
+    point_list = generate_points(20, 0, 10)
+    print(point_list)
     matrix = calculate_distance_matrix(point_list)
     
     data = {
@@ -15,7 +16,7 @@ def main():
         'opt_solution' : opt.solve_optimal(matrix),
         'matrix' : matrix,
         'points' : point_list}
-    
+    heur.mst_heuristic(matrix)
     plot(data)
     
 
