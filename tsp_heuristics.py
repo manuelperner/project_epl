@@ -13,9 +13,33 @@ def nearest_neighbour(matrix):
     
 def first_come_first_serve(matrix):
     return list(range(len(matrix)))
-     
+    
 def nearest_insertion(matrix):
-    raise NotImplementedError()
+    tours = []
+    for i in range(len(matrix)):
+        tours.append(__nearest_insertion_fixed_start(matrix, i))
+    return min(tours, key=lambda k: calc_route_length(k, matrix))
+     
+def __nearest_insertion_fixed_start(matrix, start_point):
+    n = len(matrix)
+    tour = [start_point]
+    while len(tour) < n:
+        all_nearest = []
+        # find nearest:
+        for tour_point in tour:
+            possible_neighbours = [(i, val) for i, val in enumerate(matrix[tour_point]) if i not in tour]
+            nearest_to_point = min(possible_neighbours, key=lambda k: k[1])
+            all_nearest.append(nearest_to_point)
+        next_point = min(all_nearest, key= lambda i: i[1])
+        # find best insert position:
+        all_possible_tours = []
+        for pos in range(len(tour)):
+            possible_tour = tour[:pos+1] + [next_point[0]] + tour[pos+1:]
+            length = calc_route_length(possible_tour, matrix)
+            all_possible_tours.append( [possible_tour, length])
+        best_tour = min(all_possible_tours, key=lambda k: k[1])
+        tour = best_tour[0]
+    return tour
     
 def cheapest_insertion(matrix):
     raise NotImplementedError()
@@ -53,21 +77,6 @@ def _kruskal(matrix):
         edges.remove(shortest_edge)
     return graph
     
-def test_is_cycle():
-    g = [{'from': 3, 'to': 5, 'dist': 0.86},    
-        {'from': 2, 'to': 4, 'dist': 1.82},
-{'from': 0, 'to': 6, 'dist': 2.01},
-{'from': 1, 'to': 6, 'dist': 2.67},
-{'from': 0, 'to': 1, 'dist': 3.33},
-{'from': 0, 'to': 4, 'dist': 5.31},
-{'from': 1, 'to': 4, 'dist': 6.49},
-{'from': 0, 'to': 2, 'dist': 7.03},
-{'from': 4, 'to': 6, 'dist': 7.09},
-{'from': 1, 'to': 2, 'dist': 7.73},
-{'from': 2, 'to': 6, 'dist': 8.71}]
-    cycle = _is_cycle(g)
-    
- 
 def _is_cycle(graph):
     all_vertices = set()
     for edge in graph:
@@ -104,23 +113,6 @@ def _is_cycle_start_point(graph, start_point):
             return False
     is_cycle = explore(start_point, None)
     return is_cycle
-
-def check_cycles(adj_m):
-    """Checks whether a given adjacency matrix has cycles in it"""
-    visited = []
-    
-    def explore(node, parent):
-        if node in visited:
-            return True
-        else:
-            visited.append(node)
-            neighbours = getNeighboursOfVertex(adj_m, node)
-            neighbours = list(filter(lambda a: a != parent, neighbours))
-            for u in neighbours:
-                if explore(u, node):
-                    return True
-            return False
-    return explore(0,None)
     
 def multi_fragment(matrix):
     raise NotImplementedError()

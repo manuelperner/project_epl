@@ -3,12 +3,19 @@ from lib import read_matrix_from_csv, generate_points, calculate_distance_matrix
 import tsp_heuristics
 
 def main():
-    point_list = generate_points(5, 0, 10)
-    matrix = calculate_distance_matrix(point_list)
-    #matrix = read_matrix_from_csv('matrix.csv')
-    #write_matrix_to_csv(matrix, 'matrix.csv')
-    #my_str = run_matlab_script('mst_heuristic.m')
-    tsp_heuristics.mst_heuristic(matrix)
+    better_list = []
+    for i in range(30):
+        point_list = generate_points(50, 0, 10)
+        matrix = calculate_distance_matrix(point_list)
+        ni = tsp_heuristics.nearest_insertion(matrix)
+        nn = tsp_heuristics.nearest_neighbour(matrix)
+        if ni != nn:
+            better_list.append('ni' if ni < nn else 'nn')
+        print('nearest insertion', calc_route_length(ni, matrix))
+        print('nearest neighbour', calc_route_length(nn, matrix))
+        print()
+    print('Nearest neighbour besser: ', sum([1 for i in better_list if i == 'nn']))
+    print('Nearest insertion besser: ', sum([1 for i in better_list if i == 'ni']))
     #tsp_heuristics.test_is_cycle()
     
     

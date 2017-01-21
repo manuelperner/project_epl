@@ -13,10 +13,10 @@ def main():
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),
         'fcfs': heur.first_come_first_serve(matrix),
+        'ni_route' : heur.nearest_insertion(matrix),
         'opt_solution' : opt.solve_optimal(matrix),
         'matrix' : matrix,
         'points' : point_list}
-    heur.mst_heuristic(matrix)
     plot(data)
     
 
@@ -33,6 +33,7 @@ def plot(data):
     draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
     draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
     draw_route(data['fcfs'], ax3, 'FirstComeFirstServe', data)
+    draw_route(data['ni_route'], ax4, 'Nearest Insertion', data)
     
     plt.ylim(-1, 11)
     plt.xlim(-1, 11)
