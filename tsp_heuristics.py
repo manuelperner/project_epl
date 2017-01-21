@@ -42,7 +42,40 @@ def __nearest_insertion_fixed_start(matrix, start_point):
     return tour
     
 def cheapest_insertion(matrix):
-    raise NotImplementedError()
+    tours = []
+    matrix = __calculate_weighted_matrix(matrix)
+    for i in range(len(matrix)):
+        tours.append(__nearest_insertion_fixed_start(matrix, i))
+    return min(tours, key=lambda k: calc_route_length(k, matrix))
+     
+def __cheapest_insertion_fixed_start(matrix, start_point):
+    n = len(matrix)
+    tour = [start_point]
+    while len(tour) < n:
+        all_nearest = []
+        # find nearest:
+        for tour_point in tour:
+            possible_neighbours = [(i, val) for i, val in enumerate(matrix[tour_point]) if i not in tour]
+            nearest_to_point = min(possible_neighbours, key=lambda k: k[1])
+            all_nearest.append(nearest_to_point)
+        next_point = min(all_nearest, key= lambda i: i[1])
+        # find best insert position:
+        all_possible_tours = []
+        for pos in range(len(tour)):
+            possible_tour = tour[:pos+1] + [next_point[0]] + tour[pos+1:]
+            length = calc_route_length(possible_tour, matrix)
+            all_possible_tours.append( [possible_tour, length])
+        best_tour = min(all_possible_tours, key=lambda k: k[1])
+        tour = best_tour[0]
+    return tour
+
+def __calculate_weighted_matrix(matrix):
+    """modifies the already calculated distance matrix and returns a weighted distance matrix"""
+    for line in matrix:
+        for j in line:
+            if j%2 == 0:
+                weighted_matrix[line][j] = matrix[line][j] * 3
+    return weighted_matrix
     
 def mst_heuristic(matrix):
     mst_graph = _kruskal(matrix)
