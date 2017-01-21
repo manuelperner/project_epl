@@ -14,6 +14,14 @@ def write_matrix_to_csv(matrix, filename):
         for line in matrix:
             line_str = ', '.join(map('{:.5f}'.format, line))
             csvfile.write(line_str + '\n')
+            
+def read_matrix_from_csv(filename):
+    matrix = []
+    with open(filename) as csvfile:
+        for line in csvfile:
+            line = list(map(float, line.strip().split(', ')))
+            matrix.append(line)
+    return matrix
         
 def calculate_distance_matrix(points):
     """returns a distance matrix (euclidean distance).

@@ -22,17 +22,16 @@ def cheapest_insertion(matrix):
     
 def mst_heuristic(matrix):
     mst_graph = _kruskal(matrix)
-    exit()
+    assert len(mst_graph) == len(matrix) - 1
     graph = []
     for edge in mst_graph:
         reversed_edge = {'from' : edge['to'], 'to': edge['from'], 'dist' : edge['dist']}
         graph.append(edge)
         graph.append(reversed_edge)
-    sum_dist = sum(e['dist'] for e in mst_graph)
-    for edge in mst_graph:
-        print(edge)
-    print(len(mst_graph))
-    print(sum_dist)
+    # create tour
+    first_edge = graph[0]
+    tour = [first_edge['from'], first_edge['to']]
+    print(tour)
     
 def _kruskal(matrix):
     """ Returns a list of edges that spans a minimum spaning tree """
@@ -53,12 +52,38 @@ def _kruskal(matrix):
             graph = new_graph
         edges.remove(shortest_edge)
     return graph
-        
+    
+def test_is_cycle():
+    g = [{'from': 3, 'to': 5, 'dist': 0.86},    
+        {'from': 2, 'to': 4, 'dist': 1.82},
+{'from': 0, 'to': 6, 'dist': 2.01},
+{'from': 1, 'to': 6, 'dist': 2.67},
+{'from': 0, 'to': 1, 'dist': 3.33},
+{'from': 0, 'to': 4, 'dist': 5.31},
+{'from': 1, 'to': 4, 'dist': 6.49},
+{'from': 0, 'to': 2, 'dist': 7.03},
+{'from': 4, 'to': 6, 'dist': 7.09},
+{'from': 1, 'to': 2, 'dist': 7.73},
+{'from': 2, 'to': 6, 'dist': 8.71}]
+    cycle = _is_cycle(g)
+    
+ 
 def _is_cycle(graph):
+    all_vertices = set()
+    for edge in graph:
+        all_vertices.add(edge['from'])
+        all_vertices.add(edge['to'])
+    for i in all_vertices:
+        if _is_cycle_start_point(graph, i):
+            return True
+    return False
+
+        
+def _is_cycle_start_point(graph, start_point):
     """ Checks if a given list of edges has a cycle - returns True if a cycle exists"""
     visited = []
-    
     def explore(node_nr, parent_nr):
+        #print('Node_nr: {}, parent_nr: {}'.format(node_nr, parent_nr))
         if node_nr in visited:
             return True
         else:
@@ -66,15 +91,19 @@ def _is_cycle(graph):
             # search all neighbours
             neighbours = []
             for edge in graph:
-                if edge['from'] == node_nr and edge['to'] != parent_nr:
-                    neighbours.append(edge['to'])
-                elif edge['to'] == node_nr and edge['from'] != parent_nr:
-                    neighbours.append(edge['from'])
+                neighbour = None
+                if edge['from'] == node_nr:
+                    neighbour = edge['to']
+                elif edge['to'] == node_nr:
+                    neighbour = edge['from']
+                if neighbour is not None and neighbour != parent_nr:
+                    neighbours.append(neighbour)
             for u in neighbours:
                 if explore(u, node_nr):
                     return True
             return False
-    return explore(graph[0]['from'], None)
+    is_cycle = explore(start_point, None)
+    return is_cycle
 
 def check_cycles(adj_m):
     """Checks whether a given adjacency matrix has cycles in it"""
