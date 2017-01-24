@@ -7,13 +7,12 @@ from lib import generate_points, calculate_distance_matrix, print_route, calc_ro
 
 def main():
     point_list = generate_points(20, 0, 10)
-    print(point_list)
     matrix = calculate_distance_matrix(point_list)
-    
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),
         'fcfs': heur.first_come_first_serve(matrix),
         'ni_route' : heur.nearest_insertion(matrix),
+        'ch_route' : heur.cheapest_insertion(matrix),
         'opt_solution' : opt.solve_optimal(matrix),
         'matrix' : matrix,
         'points' : point_list}
@@ -21,9 +20,9 @@ def main():
     
 
 def plot(data):
-    fig, axes = plt.subplots(2, 2, sharex='col', sharey='row')
+    fig, axes = plt.subplots(3, 3, sharex='col', sharey='row')
     axes = tuple(np.array(axes).flatten())
-    ax1, ax2, ax3, ax4 = axes
+    ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9 = axes
     # draw all points on all axes:
     x_list = [x for x,y in data['points']]
     y_list = [y for x,y in data['points']]
@@ -34,6 +33,7 @@ def plot(data):
     draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
     draw_route(data['fcfs'], ax3, 'FirstComeFirstServe', data)
     draw_route(data['ni_route'], ax4, 'Nearest Insertion', data)
+    draw_route(data['ch_route'][0], ax5, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
     
     plt.ylim(-1, 11)
     plt.xlim(-1, 11)

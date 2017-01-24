@@ -1,4 +1,5 @@
-from lib import calc_route_length, print_route
+from lib import calc_route_length, create_matrix
+from lib import print_matrix, print_route
 
 def nearest_neighbour(matrix):
     """Returns a NN route (a list of indices: the first one is the start start index of the route, the last one is
@@ -46,35 +47,20 @@ def cheapest_insertion(matrix):
     matrix = __calculate_weighted_matrix(matrix)
     for i in range(len(matrix)):
         tours.append(__nearest_insertion_fixed_start(matrix, i))
-    return min(tours, key=lambda k: calc_route_length(k, matrix))
-     
-def __cheapest_insertion_fixed_start(matrix, start_point):
-    n = len(matrix)
-    tour = [start_point]
-    while len(tour) < n:
-        all_nearest = []
-        # find nearest:
-        for tour_point in tour:
-            possible_neighbours = [(i, val) for i, val in enumerate(matrix[tour_point]) if i not in tour]
-            nearest_to_point = min(possible_neighbours, key=lambda k: k[1])
-            all_nearest.append(nearest_to_point)
-        next_point = min(all_nearest, key= lambda i: i[1])
-        # find best insert position:
-        all_possible_tours = []
-        for pos in range(len(tour)):
-            possible_tour = tour[:pos+1] + [next_point[0]] + tour[pos+1:]
-            length = calc_route_length(possible_tour, matrix)
-            all_possible_tours.append( [possible_tour, length])
-        best_tour = min(all_possible_tours, key=lambda k: k[1])
-        tour = best_tour[0]
-    return tour
+    cheapest_route = min(tours, key=lambda k: calc_route_length(k, matrix))
+    cheapest_route_costs = calc_route_length(cheapest_route, matrix)
+    return cheapest_route, cheapest_route_costs
 
 def __calculate_weighted_matrix(matrix):
     """modifies the already calculated distance matrix and returns a weighted distance matrix"""
-    for line in matrix:
-        for j in line:
-            if j%2 == 0:
-                weighted_matrix[line][j] = matrix[line][j] * 3
+    n = len(matrix)
+    weighted_matrix = create_matrix(n, n)
+    for line in range(n):
+        for col in range(n):
+            if col%2 == 0:
+                weighted_matrix[line][col] = matrix[line][col] * 3
+            else:
+                weighted_matrix[line][col] = matrix[line][col]
     return weighted_matrix
     
 def mst_heuristic(matrix):
@@ -119,8 +105,7 @@ def _is_cycle(graph):
         if _is_cycle_start_point(graph, i):
             return True
     return False
-
-        
+  
 def _is_cycle_start_point(graph, start_point):
     """ Checks if a given list of edges has a cycle - returns True if a cycle exists"""
     visited = []
