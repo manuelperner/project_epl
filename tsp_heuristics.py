@@ -64,17 +64,60 @@ def __calculate_weighted_matrix(matrix):
     return weighted_matrix
     
 def mst_heuristic(matrix):
+    # get mst graph
     mst_graph = _kruskal(matrix)
-    assert len(mst_graph) == len(matrix) - 1
+    # create an eulerian graph by double all edges:
     graph = []
     for edge in mst_graph:
         reversed_edge = {'from' : edge['to'], 'to': edge['from'], 'dist' : edge['dist']}
         graph.append(edge)
         graph.append(reversed_edge)
     # create tour
-    first_edge = graph[0]
-    tour = [first_edge['from'], first_edge['to']]
-    print(tour)
+    path = __get_hierholzer_path(graph, 0)
+    # remove doubled entries
+    tour = []
+    for vertex in path:
+        if vertex not in tour:
+            tour.append(vertex)
+    return tour
+    
+def __get_hierholzer_path(edges, start_point):
+    # create a dict of of vertices having all adjacent edges stored as values
+    vertices = {}
+    for edge in edges:
+        vertex = edge['from']
+        adj = vertices.get(vertex, [])
+        adj.append(edge)
+        vertices[vertex] = adj
+    
+    forward_stack = []
+    backtrack_stack = []
+    
+    e = __next_unvisited_edge(start_point, vertices)
+    while e is not None:
+        e['visited'] = True
+        forward_stack.append(e)
+        e = __next_unvisited_edge(e['to'], vertices)
+    
+    while len(forward_stack) > 0:
+        e = forward_stack.pop()
+        backtrack_stack.append(e)
+        e = __next_unvisited_edge(e['from'], vertices)
+        while e is not None:
+            e['visited'] = True
+            forward_stack.append(e)
+            e = __next_unvisited_edge(e['to'], vertices)
+    path = [edge['from'] for edge in reversed(backtrack_stack)]
+    return path
+    
+def __next_unvisited_edge(vertex, vertices):
+    """Helper function of __get_hierholzer_path"""
+    for edge in vertices[vertex]:
+        assert edge['from'] == vertex
+        if not 'visited' in edge or not edge['visited']:
+            return edge
+    return None
+            
     
 def _kruskal(matrix):
     """ Returns a list of edges that spans a minimum spaning tree """

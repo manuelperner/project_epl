@@ -13,6 +13,7 @@ def main():
         'fcfs': heur.first_come_first_serve(matrix),
         'ni_route' : heur.nearest_insertion(matrix),
         'ch_route' : heur.cheapest_insertion(matrix),
+        'mst_route' : heur.mst_heuristic(matrix),
         'opt_solution' : opt.solve_optimal(matrix),
         'matrix' : matrix,
         'points' : point_list}
@@ -32,8 +33,9 @@ def plot(data):
     draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
     draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
     draw_route(data['fcfs'], ax3, 'FirstComeFirstServe', data)
-    draw_route(data['ni_route'], ax4, 'Nearest Insertion', data)
-    draw_route(data['ch_route'][0], ax5, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
+    draw_route(data['ni_route'], ax4, 'Nearest Insertion', data),
+    draw_route(data['mst_route'], ax5, 'MST Heuristic', data),
+    draw_route(data['ch_route'][0], ax6, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
     
     plt.ylim(-1, 11)
     plt.xlim(-1, 11)
