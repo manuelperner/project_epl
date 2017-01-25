@@ -144,20 +144,21 @@ def _is_cycle(graph):
     for edge in graph:
         all_vertices.add(edge['from'])
         all_vertices.add(edge['to'])
+    visited = set()
     for i in all_vertices:
-        if _is_cycle_start_point(graph, i):
-            return True
+        if i not in visited:
+            if _is_cycle_start_point(graph, i, visited):
+                return True
     return False
   
-def _is_cycle_start_point(graph, start_point):
+def _is_cycle_start_point(graph, start_point, visited):
     """ Checks if a given list of edges has a cycle - returns True if a cycle exists"""
-    visited = []
     def explore(node_nr, parent_nr):
         #print('Node_nr: {}, parent_nr: {}'.format(node_nr, parent_nr))
         if node_nr in visited:
             return True
         else:
-            visited.append(node_nr)
+            visited.add(node_nr)
             # search all neighbours
             neighbours = []
             for edge in graph:

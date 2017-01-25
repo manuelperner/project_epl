@@ -30,7 +30,7 @@ def plot(data):
     for ax in axes:
         ax.plot(x_list, y_list, marker='o', linestyle='', color='green')
     
-    draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
+    #draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
     draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
     draw_route(data['fcfs'], ax3, 'FirstComeFirstServe', data)
     draw_route(data['ni_route'], ax4, 'Nearest Insertion', data),
