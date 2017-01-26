@@ -6,7 +6,7 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length, write_matrix_to_csv
 
 def main():
-    point_list = generate_points(20, 0, 10)
+    point_list = generate_points(50, 0, 10)
     matrix = calculate_distance_matrix(point_list)
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),
@@ -14,7 +14,7 @@ def main():
         'ni_route' : heur.nearest_insertion(matrix),
         'ch_route' : heur.cheapest_insertion(matrix),
         'mst_route' : heur.mst_heuristic(matrix),
-        'opt_solution' : opt.solve_optimal(matrix),
+        'opt_solution' : opt.solve_optimal(matrix, point_list),
         'matrix' : matrix,
         'points' : point_list}
     plot(data)
@@ -30,7 +30,7 @@ def plot(data):
     for ax in axes:
         ax.plot(x_list, y_list, marker='o', linestyle='', color='green')
     
-    #draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
+    draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
     draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
     draw_route(data['fcfs'], ax3, 'FirstComeFirstServe', data)
     draw_route(data['ni_route'], ax4, 'Nearest Insertion', data),

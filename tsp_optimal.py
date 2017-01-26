@@ -1,22 +1,58 @@
-glob_gurobi_installed = False
+import os.path
+import subprocess
+import numpy as np
+from tempfile import TemporaryDirectory
+
+# try to import gurobi
 try:
     from gurobipy import Model, quicksum, GRB
-    glob_gurobi_installed = True
-except:
-    pass
-import numpy as np
-import pulp
-from lpsolve55 import lpsolve, GE, LE, EQ, IMPORTANT
+except: pass
+# try to import pulp
+try:
+    import pulp
+except: pass
+# try to import lpsolve55
+try:
+    from lpsolve55 import lpsolve, GE, LE, EQ, IMPORTANT
+except: pass
 
-class GurobiNotInstalledError(Exception):
-    pass
+from lib import create_tsplib_file, Settings
+
     
-def solve_optimal(matrix):
-    if glob_gurobi_installed:
+def solve_optimal(matrix, point_list):
+    if Settings.get('optimal_solver') == 'gurobi':
         return solve_optimal_gurobi(matrix)
     else:
-        return solve_optimal_pulp(matrix)
+        # use concorde
+        return solve_optimal_concorde(point_list)
         
+def solve_optimal_concorde(point_list):
+    # create a point list file
+    with TemporaryDirectory() as tmpdirname:
+        tsp_filename = 'tsp_file.tsp'
+        tsp_fullname = os.path.join(tmpdirname, tsp_filename)
+        create_tsplib_file(tsp_fullname, point_list)
+        conc_exe = Settings.get('concorde_executable')
+        
+        # call concorde in tmp folder
+        process = subprocess.Popen([conc_exe, tsp_filename],
+            stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, cwd=tmpdirname)
+        #output = process.stdout.read()
+        #output_err = process.stderr.read()
+        exit_code = process.wait()
+        if exit_code != 0:
+            raise RuntimeError('concorde returned an error')
+        
+        # read output of concorde
+        tour = []
+        with open(tsp_fullname[:-4] + '.sol') as sol_file:
+            sol_file.readline()
+            for line in sol_file:
+                line = map(int, line.strip().split())
+                tour.extend(line)
+        if len(tour) != len(point_list):
+            raise RuntimeError('concorde returned a wrong tour')
+        return tour
         
 def solve_optimal_lpsolve(matrix):
     """

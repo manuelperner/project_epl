@@ -72,6 +72,16 @@ def run_matlab_script(script_name):
     outp = outp.decode('utf-8')
     return outp
     
+def create_tsplib_file(filename, point_list):
+    with open(filename, 'wt') as file:
+        file.write('NAME : {}\n'.format(filename))
+        file.write('TYPE : TSP\n')
+        file.write('DIMENSION : {}\n'.format(len(point_list)))
+        file.write('EDGE_WEIGHT_TYPE : EUC_2D\n')
+        file.write('NODE_COORD_SECTION\n')
+        for i, point in enumerate(point_list):
+            file.write('{} {:.4f} {:.4f}\n'.format(i+1, point[0], point[1]))
+        file.write('EOF\n')
     
 class Settings:
     __singleton = None
