@@ -33,7 +33,9 @@ def solve_optimal_concorde(point_list):
         tsp_fullname = os.path.join(tmpdirname, tsp_filename)
         create_tsplib_file(tsp_fullname, point_list)
         conc_exe = Settings.get('concorde_executable')
-        
+        if not os.path.isabs(conc_exe):
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            conc_exe = os.path.join(dir_path, conc_exe)
         # call concorde in tmp folder
         process = subprocess.Popen([conc_exe, tsp_filename],
             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, cwd=tmpdirname)
