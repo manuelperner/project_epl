@@ -149,6 +149,7 @@ def solve_optimal_gurobi(matrix):
     # Create variables
     x = [[model.addVar(vtype=GRB.BINARY, ub=1.0, lb=0.0, name='x{}{}'.format(i,j)) for j in N] for i in range(n)]
     u = [ model.addVar(vtype=GRB.CONTINUOUS, name='u{}'.format(i))  for i in N] # miller tucker vars
+    model.update()
     # Set objective
     sum_tour_length = [x[i][j] * matrix[i][j] for i in N for j in N]
     model.setObjective(quicksum(sum_tour_length), GRB.MINIMIZE)
