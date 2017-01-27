@@ -2,8 +2,10 @@ import random
 import json
 import subprocess
 import csv
+import os.path
 
 SETTINGS_FILE = 'settings.ini'
+SETTINGS_DEFAULT = 'settings_default.ini'
 
 def print_matrix(matrix):
     for line in matrix:
@@ -87,7 +89,6 @@ class Settings:
     __singleton = None
     
     def __init__(self):
-        assert Settings.__singleton == None
         # load conf file
         try:
             self.read_settings_file()
@@ -95,8 +96,11 @@ class Settings:
             raise RuntimeError('Reading settings file failed')
             
     def read_settings_file(self):
+        settings_file = SETTINGS_FILE
+        if not os.path.isfile(settings_file):
+            settings_file = SETTINGS_DEFAULT
         self.data = {}
-        with open(SETTINGS_FILE) as f:
+        with open(settings_file) as f:
             for line in f:
                 line = line.strip()
                 if line == '' or line.startswith('#'):
