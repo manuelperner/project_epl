@@ -9,7 +9,7 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route
 
 MIN_INSTANCE_SIZE = 3
-MAX_INSTANCE_SIZE = 4
+MAX_INSTANCE_SIZE = 10
 STEP = 1
 SIMULATIONS = 4
 
@@ -20,7 +20,7 @@ def main():
         sim_data = {
             'instance_size': [],
             'nearest_neighbour_time': [],
-            'optimal_gurobi_time': []
+            'optimal_concorde_time': []
         }
         
         for instance_size in instance_sizes:
@@ -31,31 +31,31 @@ def main():
             point_list = generate_points(instance_size, 0, 10)
             matrix = calculate_distance_matrix(point_list)
             
-            time, route = test_algorithm(matrix, 'nearest_neighbour')
+            time, route = test_algorithm(matrix, point_list, 'nearest_neighbour')
             sim_data['nearest_neighbour_time'].append(time)
             
-            time, route = test_algorithm(matrix, 'optimal')
-            sim_data['optimal_gurobi_time'].append(time)
+            time, route = test_algorithm(matrix, point_list, 'optimal_concorde')
+            sim_data['optimal_concorde_time'].append(time)
             
         data.append(sim_data)
     
     avg_nn = [avg([data[sim]['nearest_neighbour_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
-    avg_opt = [avg([data[sim]['optimal_gurobi_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
+    avg_opt = [avg([data[sim]['optimal_concorde_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
     
     avg_data = {
         'instance_size' : data[0]['instance_size'],
         'nearest_neighbour_time' : avg_nn,
-        'optimal_gurobi_time' : avg_opt
+        'optimal_concorde_time' : avg_opt
         }
     plot(avg_data)
     
 def avg(l):
     return sum(l) / len(l)
 
-def test_algorithm(matrix, method):
+def test_algorithm(matrix, point_list, method):
     time_start = datetime.now()
-    if method == 'optimal':
-        route = opt.solve_optimal(matrix)
+    if method == 'optimal_concorde':
+        route = opt.solve_optimal(matrix, point_list)
     elif method == 'nearest_neighbour':
         route = heur.nearest_neighbour(matrix)
     time_end = datetime.now()
@@ -71,12 +71,13 @@ def plot(data):
     ax1.plot(size, data['nearest_neighbour_time'], label='Nearest Neighbour time')
     ax1.legend(loc='upper left')
     ax1.set_xlabel('Instance size')
-    ax1.set_ylabel('Time [s]')
+    ax1.set_ylabel('Time [s] Heuristic Algorithms')
     
     ax2 = ax1.twinx()
-    ax2.plot(size, data['optimal_gurobi_time'], label='Solver time')
+    ax2.plot(size, data['optimal_concorde_time'], label='Concorde optimal time')
     ax2.legend(loc='upper right')
-    ax2.set_ylabel('Time [s]')
+    ax2.set_ylabel('Time [s] Optimal Solvers')
+    plt.title('Average calculation time of {} random instances each instance size'.format(SIMULATIONS))
     plt.show()
 
 if __name__ == '__main__':
