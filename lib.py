@@ -82,7 +82,8 @@ def create_tsplib_file(filename, point_list):
         file.write('EDGE_WEIGHT_TYPE : EUC_2D\n')
         file.write('NODE_COORD_SECTION\n')
         for i, point in enumerate(point_list):
-            file.write('{} {:.4f} {:.4f}\n'.format(i+1, point[0], point[1]))
+            #file.write('{} {:.4f} {:.4f}\n'.format(i+1, point[0], point[1]))
+            file.write('{} {} {}\n'.format(i+1, int(point[0]*1000), int(point[1]*1000)))
         file.write('EOF\n')
     
 class Settings:
