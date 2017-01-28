@@ -5,10 +5,7 @@ import tsp_heuristics
 def main():
     point_list = generate_points(50, 0, 10)
     matrix = calculate_distance_matrix(point_list)
-    tour = tsp_heuristics.multi_fragment(matrix)
-    #create_tsplib_file('tspfile.tsp', point_list)
-    #tour = opt.solve_optimal(matrix, point_list)
-    print(tour)
+    tour = tsp_heuristics.mst_heuristic_matlab(matrix)
     
 if __name__ == '__main__':
     main()
