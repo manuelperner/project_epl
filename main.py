@@ -6,7 +6,7 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length, write_matrix_to_csv
 
 def main():
-    point_list = generate_points(20, 0, 10)
+    point_list = generate_points(50, 0, 10)
     matrix = calculate_distance_matrix(point_list)
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),

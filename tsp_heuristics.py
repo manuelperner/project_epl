@@ -1,3 +1,5 @@
+from itertools import chain
+
 from lib import calc_route_length, create_matrix
 from lib import print_matrix, print_route
 
@@ -75,8 +77,13 @@ def mst_heuristic(matrix):
     # create tour
     path = __get_hierholzer_path(graph, 0)
     # remove doubled entries
+    tours = [__mst_tour_from_hierholzer(path, start_point) for start_point in range(len(path))]
+    tours = [(calc_route_length(tour, matrix), tour) for tour in tours]
+    return min(tours, key=lambda k: k[0])[1]
+    
+def __mst_tour_from_hierholzer(path, start_point):
     tour = []
-    for vertex in path:
+    for vertex in chain(path[start_point:], path[:start_point]):
         if vertex not in tour:
             tour.append(vertex)
     return tour
