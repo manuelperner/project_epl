@@ -9,9 +9,9 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route
 
 MIN_INSTANCE_SIZE = 4
-MAX_INSTANCE_SIZE = 20
+MAX_INSTANCE_SIZE = 30
 STEP = 2
-SIMULATIONS = 10
+SIMULATIONS = 100
 
 def main():
     data = []
