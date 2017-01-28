@@ -6,7 +6,7 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length, write_matrix_to_csv
 
 def main():
-    point_list = generate_points(20, 0, 10)
+    point_list = generate_points(50, 0, 10)
     matrix = calculate_distance_matrix(point_list)
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),
@@ -14,6 +14,7 @@ def main():
         'ni_route' : heur.nearest_insertion(matrix),
         'ch_route' : heur.cheapest_insertion(matrix),
         'mst_route' : heur.mst_heuristic(matrix),
+        'mult_route' : heur.multi_fragment(matrix),
         'opt_solution' : opt.solve_optimal(matrix, point_list),
         'matrix' : matrix,
         'points' : point_list}
@@ -21,9 +22,9 @@ def main():
     
 
 def plot(data):
-    fig, axes = plt.subplots(3, 3, sharex='col', sharey='row')
+    fig, axes = plt.subplots(3, 2, sharex='col', sharey='row')
     axes = tuple(np.array(axes).flatten())
-    ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9 = axes
+    ax1, ax2, ax3, ax4, ax5, ax6 = axes
     # draw all points on all axes:
     x_list = [x for x,y in data['points']]
     y_list = [y for x,y in data['points']]
@@ -32,15 +33,15 @@ def plot(data):
     
     draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
     draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
-    draw_route(data['fcfs'], ax3, 'FirstComeFirstServe', data)
-    draw_route(data['ni_route'], ax4, 'Nearest Insertion', data),
-    draw_route(data['mst_route'], ax5, 'MST Heuristic', data),
+    draw_route(data['ni_route'], ax3, 'Nearest Insertion', data),
+    draw_route(data['mst_route'], ax4, 'MST Heuristic', data),
+    draw_route(data['mult_route'], ax5, 'Multi Fragment', data),
     draw_route(data['ch_route'][0], ax6, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
     
     plt.ylim(-1, 11)
     plt.xlim(-1, 11)
     plt.grid()
-    plt.legend()
+    #plt.legend()
     plt.show()
     
 def draw_route(route, axis, label, data):

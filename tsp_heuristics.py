@@ -1,3 +1,5 @@
+from itertools import chain
+
 from lib import calc_route_length, create_matrix
 from lib import print_matrix, print_route
 
@@ -80,8 +82,13 @@ def mst_heuristic(matrix):
     # create tour
     path = __get_hierholzer_path(graph, 0)
     # remove doubled entries
+    tours = [__mst_tour_from_hierholzer(path, start_point) for start_point in range(len(path))]
+    tours = [(calc_route_length(tour, matrix), tour) for tour in tours]
+    return min(tours, key=lambda k: k[0])[1]
+    
+def __mst_tour_from_hierholzer(path, start_point):
     tour = []
-    for vertex in path:
+    for vertex in chain(path[start_point:], path[:start_point]):
         if vertex not in tour:
             tour.append(vertex)
     return tour
@@ -122,10 +129,54 @@ def __next_unvisited_edge(vertex, vertices):
         if not 'visited' in edge or not edge['visited']:
             return edge
     return None
-            
     
-def _kruskal(matrix):
-    """ Returns a list of edges that spans a minimum spaning tree """
+def multi_fragment(matrix):
+    edges = _get_edge_list_from_matrix(matrix)
+    # sort edges
+    edges.sort(key=lambda d: d['dist'], reverse=True)
+    # create a cycle free graph where all vertices have max degree of 2
+    graph = []
+    vertex_degree = {i: 0 for i in range(len(matrix))}
+    while len(edges) > 0:
+        shortest_edge = edges.pop()
+        # check vertex degree from and to
+        from_vertex, to_vertex = shortest_edge['from'], shortest_edge['to']
+        if vertex_degree[from_vertex] == 2 or vertex_degree[to_vertex] == 2:
+            continue
+        # check subcycles
+        new_graph = graph + [shortest_edge]
+        if _is_cycle(new_graph):
+            continue
+        else:
+            graph = new_graph
+        # update graph and vertex degrees
+        vertex_degree[from_vertex] += 1; vertex_degree[to_vertex] += 1
+    tour = _multi_fragment_build_tour(graph, vertex_degree)
+    return tour
+    
+def _multi_fragment_build_tour(graph, vertex_degree):
+    # perfect, we now have to vertices where degree = 1, select one of them
+    vertex_neighbours = [[] for _ in vertex_degree]
+    for edge in graph:
+        vertex_neighbours[edge['from']].append(edge['to'])
+        vertex_neighbours[edge['to']].append(edge['from'])
+    # find start_edge
+    for vert, neighbrs in enumerate(vertex_neighbours):
+        if len(neighbrs) == 1:
+            start = vert
+            break
+    tour = [start]
+    prev = start
+    # now build the tour
+    while len(tour) < len(vertex_degree):
+        next = vertex_neighbours[prev].pop()
+        if len(tour) > 1 and next == tour[-2]:
+            next = vertex_neighbours[prev].pop()
+        tour.append(next)
+        prev = next
+    return tour
+
+def _get_edge_list_from_matrix(matrix):
     n = len(matrix)
     # create edges
     edges = list()
@@ -133,15 +184,21 @@ def _kruskal(matrix):
         for j in range(i+1, n):
             edge = {'from' : i, 'to': j, 'dist' : matrix[i][j]}
             edges.append(edge)
+    return edges
+    
+def _kruskal(matrix):
+    """ Returns a list of edges that spans a minimum spaning tree """
+    edges = _get_edge_list_from_matrix(matrix)
+    # sort edges
+    edges.sort(key=lambda d: d['dist'], reverse=True)
     # create a cycle free graph:
     graph = []
     while len(edges) > 0:
         # find the shortest edge in list:
-        shortest_edge = min(edges, key= lambda k: k['dist'])
+        shortest_edge = edges.pop()
         new_graph = graph + [shortest_edge]
         if not _is_cycle(new_graph):
             graph = new_graph
-        edges.remove(shortest_edge)
     return graph
     
 def _is_cycle(graph):
@@ -180,9 +237,6 @@ def _is_cycle_start_point(graph, start_point, visited):
             return False
     is_cycle = explore(start_point, None)
     return is_cycle
-    
-def multi_fragment(matrix):
-    raise NotImplementedError()
     
 def __nearest_neighbour_fixed_start(matrix, start):
     """Returns a NN route (a list of indices: the first one is the start start index of the route, the last one is
