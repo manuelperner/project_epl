@@ -3,4 +3,5 @@ matrix.csv
 *__pycache__
 *.lp
 *.pyc
+*.asv
 gurobi.log
