@@ -76,7 +76,7 @@ def mst_heuristic(matrix):
         return mst_heuristic_matlab(matrix)
     except:
         print('warning: matlab not installed')
-        return mst_heuristic_matlab(matrix)
+        return mst_heuristic_python(matrix)
     
 def mst_heuristic_python(matrix):
     # get mst graph
