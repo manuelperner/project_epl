@@ -1,4 +1,4 @@
-function [w_st, ST, X_st, ne, w] = kruskal(X, w)
+function [w_st, ST, X_st, ne, w] = FUNC_KRUSKAL(X, w)
 % function [w_st, ST, X_st] = kruskal(X, w)
 %
     isUndirGraph = 1;
