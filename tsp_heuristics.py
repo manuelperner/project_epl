@@ -63,6 +63,11 @@ def __calculate_weighted_matrix(matrix):
                 weighted_matrix[line][col] = matrix[line][col]
     return weighted_matrix
     
+def mst_heuristic_matlab(matix):
+    write_matrix_to_csv(matrix, 'matrix.csv'):
+    output = run_matlab_script('Kruskal.m')
+    print(output)
+    
 def mst_heuristic(matrix):
     # get mst graph
     mst_graph = _kruskal(matrix)
