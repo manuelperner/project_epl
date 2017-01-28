@@ -1,4 +1,5 @@
 import random
+from lib import write_matrix_to_csv, calculate_distance_matrix
 
 def generate_points(number, min, max):
     """generates `number` random points in a x,y field - limited by `min` and max"""
@@ -12,7 +13,9 @@ def generate_points(number, min, max):
     return l
     
 def main():
-    matrix = generate_points(10, 0, 10)
-    print(matrix)
+    points = generate_points(10, 0, 10)
     
+    matrix=calculate_distance_matrix(points)
+
+    write_matrix_to_csv(matrix,"matrix.csv")
 main()
