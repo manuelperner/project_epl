@@ -21,10 +21,8 @@ for k=1:(size(Kruskal_edges,1))
     all_edges(k+size(Kruskal_edges,1),:) = Kruskal_edges(k,[2 1]);
 end
 
-start_point=all_edges(1,1);
-
 % create Eulertour
-[next_edge] = FUNC_NEXT_VISITED(start_point, visited, all_edges);
+[next_edge] = FUNC_NEXT_VISITED(all_edges(1,1), visited, all_edges);
 
 % creating subtours until each edge is one subtour
 while next_edge ~= -1
@@ -62,7 +60,3 @@ for i=1:size(path,2)
         fprintf(',')
     end
 end
-
-      
-      
-
