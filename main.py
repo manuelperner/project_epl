@@ -43,9 +43,16 @@ def plot(data):
     #plt.xlim(-1, 11)
     #plt.grid()
     #plt.legend()
-    figManager = plt.get_current_fig_manager()
-    print(type(figManager))
+    toggleFullScreen()
     plt.show()
+    
+def toggleFullScreen():
+    backend = plt.get_backend()
+    if backend == 'TkAgg':
+        mng = plt.get_current_fig_manager()
+        #mng.window.state('zoomed')
+        mng.resize(*mng.window.maxsize())
+    
     
 def draw_route(route, axis, label, data):
     tsp_x = [data['points'][i][0] for i in route]
