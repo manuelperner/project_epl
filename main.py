@@ -23,9 +23,10 @@ def main():
     
 
 def plot(data):
-    try:
-        plt.switch_backend('Qt5Agg')
-    except: pass
+    if plt.get_backend() == 'MacOSX':
+        try:
+            plt.switch_backend('Qt5Agg')
+        except: pass
     fig, axes = plt.subplots(3, 2, sharex='col', sharey='row')
     axes = tuple(np.array(axes).flatten())
     ax1, ax2, ax3, ax4, ax5, ax6 = axes
