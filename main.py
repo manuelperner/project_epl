@@ -18,6 +18,7 @@ def main():
         'opt_solution' : opt.solve_optimal(matrix, point_list),
         'matrix' : matrix,
         'points' : point_list}
+    data['opt_length'] = calc_route_length(data['opt_solution'], matrix)
     plot(data)
     
 
@@ -51,8 +52,13 @@ def draw_route(route, axis, label, data):
     tsp_x.append(tsp_x[0])
     tsp_y.append(tsp_y[0])
     route_length = calc_route_length(route, data['matrix'])
+    if label != 'Optimal Solution':
+        error = (route_length / data['opt_length'])-1
+        error_str = ', Error = {:.2f}%'.format(error*100)
+    else:
+        error_str = ''
     axis.plot(tsp_x, tsp_y, label=label)
-    axis.set_title('{} (${}$={:.2f})'.format(label, 'Dist_{Total}', route_length))
+    axis.set_title('{} (${}$={:.2f}{})'.format(label, 'Dist_{Total}', route_length, error_str))
 
 
 if __name__ == '__main__':
