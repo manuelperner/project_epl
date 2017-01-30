@@ -6,7 +6,7 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length, write_matrix_to_csv
 
 def main():
-    point_list = generate_points(20, 0, 10)
+    point_list = generate_points(20, 30, 100)
     matrix = calculate_distance_matrix(point_list)
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),
@@ -39,9 +39,9 @@ def plot(data):
     draw_route(data['mult_route'], ax5, 'Multi Fragment', data),
     draw_route(data['ch_route'][0], ax6, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
     
-    plt.ylim(-1, 11)
-    plt.xlim(-1, 11)
-    plt.grid()
+    #plt.ylim(-1, 11)
+    #plt.xlim(-1, 11)
+    #plt.grid()
     #plt.legend()
     plt.show()
     
