@@ -1,18 +1,16 @@
 from appJar import gui
-#import main as m
+import main
 
 # function called by pressing the buttons
 def press(btn):
-    if btn=='Cancel':
-        app.stop()
-    else:
-        print('Number of nodes:', app.getEntry('nodes'))
-        print('Minimum value for x and y coordinates:', app.getEntry('min'))
-        print('Maximum value for x and y coordinates:', app.getEntry('max'))
+    if btn=='Generate and compute the TSP':
+        #print('Number of nodes:', app.getEntry('nodes'))
+        #print('Minimum value for x and y coordinates:', app.getEntry('min'))
+        #print('Maximum value for x and y coordinates:', app.getEntry('max'))
         nodes = int(app.getEntry('nodes'))
         min_xy = int(app.getEntry('min'))
         max_xy = int(app.getEntry('max'))
-        print(nodes,min_xy,max_xy)
+        main.main(nodes,min_xy,max_xy)
         
         
 
@@ -24,18 +22,20 @@ app.setTitle('TSP-Heuristics')
 app.setBg('DarkSeaGreen')
 #app.setGeometry(800,600)
 app.setResizable(canResize=True)
-app.addLabel('title', 'Welcome to TSP-Heuristcs', None, 0, 2)
-app.addHorizontalSeparator(None, 0, 3, colour = 'DarkSeaGreen')
-app.addMessage('mess', 'Long explanation for TSP-Heuristics. Instructions on how to use the app in detail. Centered.', None, 0, 2)
-app.setMessageBg('mess', 'red')
-app.addHorizontalSeparator(None, 0, 3, colour = 'DarkSeaGreen')
+app.startPagedWindow('Welcome to TSP-Heuristcs')
+app.startPage()
+app.addMessage('mess', 'This program generates a random TSP and solves it using different heuristics. The results of the heuristics are compared with an optimal solver solution.\nYou will be asked to define the number of nodes that should be generated and for the range of the coordinates in which the nodes are created.\nIncluded heuristics are:\n- MST Heuristic\n- Multi-Fragment\n- Nearest Neighbour\n- Nearest Insertion\n- Cheapest Insertion\nPlease proceed to the next page to enter the desired values.', None, 0, 2)
+app.stopPage()
+
+app.startPage()
 app.addLabel('nodes', 'Please enter the number of points to be generated:', None, 0)           
-app.addNumericEntry('nodes', None, 1) 
+app.addNumericEntry('nodes', None, 0) 
 app.addLabel('min', 'Define the minimum value for x and y coordinates:', None, 0)
-app.addNumericEntry('min', None, 1)
+app.addNumericEntry('min', None, 0)
 app.addLabel('max', 'Define the maximum value for x and y coordinates:', None, 0)
-app.addNumericEntry('max', None, 1)
-app.addButtons(['Compute the TSP', 'Cancel'], press, None, 0, 2)
+app.addNumericEntry('max', None, 0)
+app.addButton('Generate and compute the TSP', press, None, 0, 2)
+app.stopPage()
 
 app.setEntryFocus('nodes')
 
