@@ -50,8 +50,16 @@ def toggleFullScreen():
     backend = plt.get_backend()
     if backend == 'TkAgg':
         mng = plt.get_current_fig_manager()
-        #mng.window.state('zoomed')
+        try:
+            mng.window.state('zoomed')
+        except:
+            print('didnt work')
         mng.resize(*mng.window.maxsize())
+    elif backend == 'Qt4Agg':
+        figManager = plt.get_current_fig_manager()
+        figManager.window.showMaximized()
+    else:
+        print(backend)
     
     
 def draw_route(route, axis, label, data):
