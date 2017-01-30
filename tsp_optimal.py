@@ -38,8 +38,6 @@ def solve_optimal_concorde(point_list):
         # call concorde in tmp folder
         process = subprocess.Popen([conc_exe, tsp_filename],
             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, cwd=tmpdirname)
-        #output = process.stdout.read()
-        #output_err = process.stderr.read()
         exit_code = process.wait()
         if exit_code != 0:
             raise RuntimeError('concorde returned an error')
@@ -141,11 +139,13 @@ def solve_optimal_coin_pulp(matrix):
         model += sum(x[i][j] for i in N) == 1, ''
     # Constraints for subtour elimination:
     for i in N[1:]:
-        model += 2 <= u[i] <= n, ''
+        model += 2 <= u[i], ''
+        model += u[i] <= n, ''
     for i,j in ((i,j) for i in N[1:] for j in N[1:]):
-        model += u[i] - u[j] + 1 <= (n-1)*1-x[i][j]
+        model += u[i] - u[j] + x[i][j] * (n-1) <= n - 2, ''
+    model.writeLP('pulpmodel.lp')
     # Solve and retreive variables
-    model.solve()
+    print(model.solve())
     arr = [[int(x[i][j].value()) for j in N] for i in N]
     for i in N:
         print(u[i].value())
@@ -174,7 +174,8 @@ def solve_optimal_gurobi(matrix):
     # Constraints for subtour elimination:
     [model.addConstr(2 <= u[i] <= n) for i in N[1:]]
     [model.addConstr(u[i] - u[j] + 1 <= (n-1)*(1-x[i][j]))   for i in N[1:] for j in N[1:]]
-    #model.write('gurobi.lp')
+    model.update()
+    model.write('gurobi.lp')
     model.optimize()
     if model.status == GRB.Status.OPTIMAL:
         return __grb_retrieve_tour(model, x)

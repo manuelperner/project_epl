@@ -75,6 +75,9 @@ def run_matlab_script(script_name):
     return outp
     
 def create_tsplib_file(filename, point_list):
+    max_val = max(max(point[0], point[1]) for point in point_list)
+    factor = 10000/max_val
+    print(factor)
     with open(filename, 'wt') as file:
         file.write('NAME : {}\n'.format(filename))
         file.write('TYPE : TSP\n')
@@ -83,7 +86,7 @@ def create_tsplib_file(filename, point_list):
         file.write('NODE_COORD_SECTION\n')
         for i, point in enumerate(point_list):
             #file.write('{} {:.4f} {:.4f}\n'.format(i+1, point[0], point[1]))
-            file.write('{} {} {}\n'.format(i+1, int(point[0]*1000), int(point[1]*1000)))
+            file.write('{} {} {}\n'.format(i+1, int(point[0]*factor), int(point[1]*factor)))
         file.write('EOF\n')
     
 class Settings:
