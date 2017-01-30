@@ -56,14 +56,14 @@ def print_route(route, matrix):
     dist = calc_route_length(route, matrix)
     print('{} [dist: {:.2f}]'.format(route_str, dist))
 
-def generate_points(number, min, max):
+def generate_points(number, min_val, max_val):
     """generates `number` random points in a x,y field - limited by `min` and max"""
     l = []
     for i in range(number):
         x = random.random()
         y = random.random()
-        x = round((max-min) * x + min, 2)
-        y = round((max - min) * y + min, 2)
+        x = round((max_val-min_val) * x + min_val, 2)
+        y = round((max_val - min_val) * y + min_val, 2)
         l.append((x,y))
     return l
     
