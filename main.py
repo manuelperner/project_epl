@@ -23,6 +23,9 @@ def main():
     
 
 def plot(data):
+    try:
+        plt.switch_backend('Qt5Agg')
+    except: pass
     fig, axes = plt.subplots(3, 2, sharex='col', sharey='row')
     axes = tuple(np.array(axes).flatten())
     ax1, ax2, ax3, ax4, ax5, ax6 = axes
@@ -55,9 +58,9 @@ def toggleFullScreen():
         except:
             print('didnt work')
         mng.resize(*mng.window.maxsize())
-    elif backend == 'Qt4Agg':
+    elif backend == 'Qt4Agg' or backend == 'Qt5Agg':
         figManager = plt.get_current_fig_manager()
-        figManager.window.showMaximized()
+        figManager.window.showMaximized()  
     else:
         print(backend)
     
