@@ -5,8 +5,8 @@ import tsp_heuristics as heur
 import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route, calc_route_length, write_matrix_to_csv
 
-def main():
-    point_list = generate_points(7, 0, 10)
+def main(nodes, min_xy, max_xy):
+    point_list = generate_points(nodes, min_xy, max_xy)
     matrix = calculate_distance_matrix(point_list)
     data = {
         'nn_route' : heur.nearest_neighbour(matrix),
@@ -83,4 +83,4 @@ def draw_route(route, axis, label, data):
 
 
 if __name__ == '__main__':
-    main()
+    main(20, 0, 10)
