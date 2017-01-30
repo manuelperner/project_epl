@@ -44,7 +44,7 @@ def plot(data):
     #plt.grid()
     #plt.legend()
     figManager = plt.get_current_fig_manager()
-    print(figManager)
+    print(type(figManager))
     plt.show()
     
 def draw_route(route, axis, label, data):
