@@ -6,7 +6,7 @@ def main():
     point_list = generate_points(10, 0, 10)
     matrix = calculate_distance_matrix(point_list)
     #tour = tsp_heuristics.mst_heuristic_matlab(matrix)
-    tour = opt.solve_optimal_coin_pulp(matrix)
+    tour = opt.solve_optimal(matrix, point_list)
     #tour = opt.solve_optimal_gurobi(matrix)
     
 if __name__ == '__main__':

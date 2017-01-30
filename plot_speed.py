@@ -9,9 +9,9 @@ import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route
 
 MIN_INSTANCE_SIZE = 4
-MAX_INSTANCE_SIZE = 30
+MAX_INSTANCE_SIZE = 20
 STEP = 2
-SIMULATIONS = 100
+SIMULATIONS = 5
 
 def main():
     data = []
@@ -22,13 +22,13 @@ def main():
             'nearest_neighbour_time': [],
             'optimal_concorde_time': [],
             'optimal_gurobi_time' : [],
+            'optimal_coin_time' : [],
         }
         
         for instance_size in instance_sizes:
-            print(instance_size)
             # create test instance:
             sim_data['instance_size'].append(instance_size)
-            print(instance_size)
+            print(i, instance_size)
             point_list = generate_points(instance_size, 0, 10)
             matrix = calculate_distance_matrix(point_list)
             
@@ -41,17 +41,22 @@ def main():
             time, route = test_algorithm(matrix, point_list, 'optimal_gurobi')
             sim_data['optimal_gurobi_time'].append(time)
             
+            time, route = test_algorithm(matrix, point_list, 'optimal_coin')
+            sim_data['optimal_coin_time'].append(time)
+            
         data.append(sim_data)
     
     #avg_nn = [avg([data[sim]['nearest_neighbour_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
     avg_conc = [avg([data[sim]['optimal_concorde_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
     avg_gur = [avg([data[sim]['optimal_gurobi_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
+    avg_coin = [avg([data[sim]['optimal_coin_time'][ins_size_ind] for sim in range(SIMULATIONS)]) for ins_size_ind in range(len(instance_sizes))]
     
     avg_data = {
         'instance_size' : data[0]['instance_size'],
         #'nearest_neighbour_time' : avg_nn,
         'optimal_concorde_time' : avg_conc,
         'optimal_gurobi_time' : avg_gur,
+        'optimal_coin_time' : avg_coin
         }
     plot(avg_data)
     
@@ -64,6 +69,8 @@ def test_algorithm(matrix, point_list, method):
         route = opt.solve_optimal_concorde(point_list)
     elif method == 'optimal_gurobi':
         route = opt.solve_optimal_gurobi(matrix)
+    elif method == 'optimal_coin':
+        route = opt.solve_optimal_coin_pulp(matrix)
     elif method == 'nearest_neighbour':
         route = heur.nearest_neighbour(matrix)
     time_end = datetime.now()
@@ -83,8 +90,9 @@ def plot(data):
     
     ax2 = ax1.twinx()
     ax2.plot(size, data['optimal_gurobi_time'], label='Gurobi optimal time')
+    ax2.plot(size, data['optimal_coin_time'], label='COIN OR optimal time')
     ax2.legend(loc='upper right')
-    ax2.set_ylabel('Time [s] Gurobi')
+    ax2.set_ylabel('Time [s] ILP')
     plt.title('Average calculation time of {} random instances each instance size'.format(SIMULATIONS))
     plt.show()
 

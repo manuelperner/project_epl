@@ -19,11 +19,17 @@ from lib import create_tsplib_file, Settings
 
     
 def solve_optimal(matrix, point_list):
-    if Settings.get('optimal_solver') == 'gurobi':
+    solver = Settings.get('optimal_solver')
+    if solver == 'gurobi':
         return solve_optimal_gurobi(matrix)
-    else:
-        # use concorde
+    elif solver == 'concorde':
         return solve_optimal_concorde(point_list)
+    elif solver == 'coin_pulp':
+        return solve_optimal_coin_pulp(matrix)
+    elif solver == 'lpsolve':
+        return solve_optimal_lpsolve(matrix)
+    else:
+        raise RuntimeError('Solver not implemented')
         
 def solve_optimal_concorde(point_list):
     # create a point list file
@@ -143,13 +149,13 @@ def solve_optimal_coin_pulp(matrix):
         model += u[i] <= n, ''
     for i,j in ((i,j) for i in N[1:] for j in N[1:]):
         model += u[i] - u[j] + x[i][j] * (n-1) <= n - 2, ''
-    model.writeLP('pulpmodel.lp')
+    #model.writeLP('pulpmodel.lp')
     # Solve and retreive variables
-    print(model.solve())
+    model.solve(pulp.COIN_CMD())
+    if model.status != pulp.constants.LpStatusOptimal:
+        raise RuntimeError('Pulp Solver Solution not optimal')
     arr = [[int(x[i][j].value()) for j in N] for i in N]
-    for i in N:
-        print(u[i].value())
-    print(__retrieve_tour_from_array(arr))
+    return __retrieve_tour_from_array(arr)
 
 def solve_optimal_gurobi(matrix):
     """
@@ -175,7 +181,7 @@ def solve_optimal_gurobi(matrix):
     [model.addConstr(2 <= u[i] <= n) for i in N[1:]]
     [model.addConstr(u[i] - u[j] + 1 <= (n-1)*(1-x[i][j]))   for i in N[1:] for j in N[1:]]
     model.update()
-    model.write('gurobi.lp')
+    #model.write('gurobi.lp')
     model.optimize()
     if model.status == GRB.Status.OPTIMAL:
         return __grb_retrieve_tour(model, x)
