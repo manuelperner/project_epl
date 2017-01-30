@@ -38,10 +38,10 @@ def plot(data):
         ax.plot(x_list, y_list, marker='o', linestyle='', color='green')
     
     draw_route(data['opt_solution'], ax1, 'Optimal Solution', data)
-    draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
-    draw_route(data['ni_route'], ax3, 'Nearest Insertion', data),
-    draw_route(data['mst_route'], ax4, 'MST Heuristic', data),
+    draw_route(data['mst_route'], ax3, 'MST Heuristic', data),
     draw_route(data['mult_route'], ax5, 'Multi Fragment', data),
+    draw_route(data['nn_route'], ax2, 'Nearest Neighbour', data)
+    draw_route(data['ni_route'], ax4, 'Nearest Insertion', data),
     draw_route(data['ch_route'][0], ax6, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
     
     #plt.ylim(-1, 11)

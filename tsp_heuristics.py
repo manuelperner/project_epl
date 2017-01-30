@@ -11,7 +11,6 @@ def mst_heuristic(matrix):
     try:
         return mst_heuristic_matlab(matrix)
     except:
-        print('warning: matlab not installed')
         return mst_heuristic_python(matrix)
 
 def mst_heuristic_matlab(matrix):
