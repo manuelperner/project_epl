@@ -1,5 +1,8 @@
+import subprocess
+import sys
 from appJar import gui
-import main
+
+#subprocess.run(['python3', 'main.py', '3', '3', '5'])
 
 # function called by pressing the buttons
 def press(btn):
@@ -7,10 +10,12 @@ def press(btn):
         #print('Number of nodes:', app.getEntry('nodes'))
         #print('Minimum value for x and y coordinates:', app.getEntry('min'))
         #print('Maximum value for x and y coordinates:', app.getEntry('max'))
-        nodes = int(app.getEntry('nodes'))
-        min_xy = int(app.getEntry('min'))
-        max_xy = int(app.getEntry('max'))
-        main.main(nodes,min_xy,max_xy)
+        nodes = app.getEntry('nodes')
+        min_xy = app.getEntry('min')
+        max_xy = app.getEntry('max')
+        print(type(nodes))
+        subprocess.Popen([sys.executable, 'main.py', str(nodes), str(min_xy), str(max_xy)])
+        #main.main(nodes,min_xy,max_xy)
         
         
 

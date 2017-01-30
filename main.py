@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 import tsp_heuristics as heur
 import tsp_optimal as opt
@@ -83,4 +84,9 @@ def draw_route(route, axis, label, data):
 
 
 if __name__ == '__main__':
-    main(20, 0, 10)
+    if len(sys.argv) == 4:
+        nodes, min_xy, max_xy = map(float, sys.argv[1:])
+        nodes = int(nodes)
+        main(nodes, min_xy, max_xy)
+    else:
+        main(20, 0, 10)
