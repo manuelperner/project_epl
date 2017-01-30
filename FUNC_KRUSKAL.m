@@ -82,23 +82,24 @@ function dist_matrix = dist_matrix_2_dist_vector(dist_matrix,all_edges)
 end
 
 
-%
-function indexes = receive(i,representative) % index von verbundenen knoten
-    while i ~= representative(i) % Knoten mit anderem Knoten verbunden
-        i = representative(i); % dann setze o auf Knoten mit dem verbunden
+% search for indexes of nodes
+function indexes = receive(i,representative) 
+    while i ~= representative(i) 
+        i = representative(i); 
     end
     indexes = i;
 end
 
+% compare two nodes and their rank
 function [representative, ranking] = union(i, j, representative, ranking)
     rank_i = receive(i,representative);
     rank_j = receive(j,representative);
-    if ranking(rank_i) > ranking(rank_j) % Knoten index des größerem Index zuweisen
+    if ranking(rank_i) > ranking(rank_j) 
         representative(rank_j) = rank_i;
     else
-        representative(rank_i) = rank_j; % Knoten index zuweisen
+        representative(rank_i) = rank_j; 
         if ranking(rank_i) == ranking(rank_j) 
-            ranking(rank_j) = ranking(rank_j) + 1; % bei gleichem Knotenrang zweiten Knoten höher setzen
+            ranking(rank_j) = ranking(rank_j) + 1; 
         end
     end
 end
