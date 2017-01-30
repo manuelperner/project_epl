@@ -43,7 +43,8 @@ def plot(data):
     #plt.xlim(-1, 11)
     #plt.grid()
     #plt.legend()
-    test
+    figManager = plt.get_current_fig_manager()
+    print(figManager)
     plt.show()
     
 def draw_route(route, axis, label, data):
