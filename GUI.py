@@ -16,7 +16,7 @@ def press(btn):
         
 
 app = gui()
-app.showSplash('TSP-Heuristics' '\n' 'by Yanick Dickbauer, Manuel Perner, Philipp Preiß', fill='LightSeaGreen', stripe='DarkSeaGreen', fg='white', font=30)
+app.showSplash('TSP-Heuristics' '\n' 'by Yanick Dickbauer, Manuel Perner, Philipp Prei\u00df', fill='LightSeaGreen', stripe='DarkSeaGreen', fg='white', font=30)
 
 app.setBg('DarkSeaGreen')
 app.addLabel('title', 'Welcome to TSP-Heuristcs', 0, 0, 2)
