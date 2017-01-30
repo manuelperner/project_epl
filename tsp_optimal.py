@@ -7,7 +7,6 @@ from tempfile import TemporaryDirectory
 try:
     from gurobipy import Model, quicksum, GRB
 except: pass
-# try to import pulp
 try:
     import pulp
 except: pass
@@ -129,19 +128,35 @@ def solve_optimal_coin_pulp(matrix):
     of the length of the matrix.
     """
     n = len(matrix); N = list(range(len(matrix)))
-    prob = pulp.LpProblem('tsp_problem', pulp.LpMinimize)
+    model = pulp.LpProblem('tsp_problem', pulp.LpMinimize)
     # The problem variables are created
     x = pulp.LpVariable.dicts("x",(N, N),0,1, pulp.LpInteger)
     u = pulp.LpVariable.dicts("u",(N),0 ,n)
-    print(u)
-    print(x)
+    # Set Objective
+    model += sum([x[i][j]*matrix[i][j] for i in N for j in N])
+    # Constraints for assignment problem:
+    for i in N:
+        model += sum(x[i][j] for j in N) == 1, ''
+    for j in N:
+        model += sum(x[i][j] for i in N) == 1, ''
+    # Constraints for subtour elimination:
+    for i in N[1:]:
+        model += 2 <= u[i] <= n, ''
+    for i,j in ((i,j) for i in N[1:] for j in N[1:]):
+        model += u[i] - u[j] + 1 <= (n-1)*1-x[i][j]
+    # Solve and retreive variables
+    model.solve()
+    arr = [[int(x[i][j].value()) for j in N] for i in N]
+    for i in N:
+        print(u[i].value())
+    print(__retrieve_tour_from_array(arr))
 
 def solve_optimal_gurobi(matrix):
     """
     Solves a given tsp instance optimal using the python gurobi solver interface.
     
     Returns a list of indices. The result list has a cardinality
-    of the length of the matrix. Raises a GurobiNotInstalled if it cannot import gurobipy
+    of the length of the matrix.
     """
     model = Model()
     model.Params.OutputFlag = 0
