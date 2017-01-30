@@ -23,6 +23,10 @@ def main():
     
 
 def plot(data):
+    if plt.get_backend() == 'MacOSX':
+        try:
+            plt.switch_backend('Qt5Agg')
+        except: pass
     fig, axes = plt.subplots(3, 2, sharex='col', sharey='row')
     axes = tuple(np.array(axes).flatten())
     ax1, ax2, ax3, ax4, ax5, ax6 = axes
@@ -38,7 +42,29 @@ def plot(data):
     draw_route(data['mst_route'], ax4, 'MST Heuristic', data),
     draw_route(data['mult_route'], ax5, 'Multi Fragment', data),
     draw_route(data['ch_route'][0], ax6, 'Cheapest Insertion, costs={:.2f}'.format(data['ch_route'][1]), data)
+    
+    #plt.ylim(-1, 11)
+    #plt.xlim(-1, 11)
+    #plt.grid()
+    #plt.legend()
+    toggleFullScreen()
     plt.show()
+    
+def toggleFullScreen():
+    backend = plt.get_backend()
+    if backend == 'TkAgg':
+        mng = plt.get_current_fig_manager()
+        try:
+            mng.window.state('zoomed')
+        except:
+            print('didnt work')
+        mng.resize(*mng.window.maxsize())
+    elif backend == 'Qt4Agg' or backend == 'Qt5Agg':
+        figManager = plt.get_current_fig_manager()
+        figManager.window.showMaximized()  
+    else:
+        print(backend)
+    
     
 def draw_route(route, axis, label, data):
     tsp_x = [data['points'][i][0] for i in route]
