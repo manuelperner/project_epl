@@ -12,11 +12,11 @@ def press(btn):
 app = gui()
 
 #setup 'intro'
-app.showSplash('TSP-Heuristics' '\n' 'by Yanick Dickbauer, Manuel Perner, Philipp Prei\u00df', fill='LightSeaGreen', stripe='DarkSeaGreen', fg='black', font=30)
+app.showSplash('TSP-Heuristics' '\n' 'by Yanick Dickbauer, Manuel Perner, Philipp Prei\u00df', fill='LightSeaGreen', stripe='DarkSeaGreen', fg='black', font=24)
 
 #setup gui
-app.setFont(18, 'Calibri')
-app.setButtonFont(16, 'Calibri')
+app.setFont(14, 'Calibri')
+app.setButtonFont(12, 'Calibri')
 app.setTitle('TSP-Heuristics')
 app.setBg('LightSeaGreen')
 app.setResizable(canResize=True)
@@ -27,7 +27,7 @@ app.startPagedWindow('Welcome to TSP-Heuristcs')
 #create 1st page
 app.startPage()
 app.setBg('DarkSeaGreen')
-app.addMessage('mess', 'This program generates a random TSP and solves it using different heuristics. The results of the heuristics are compared with an optimal solver solution.\nYou will be asked to define the number of nodes that should be generated and for the range of the coordinates in which the nodes are created.\nIncluded heuristics are:\n- MST Heuristic\n- Multi-Fragment\n- Nearest Neighbour\n- Nearest Insertion\n- Cheapest Insertion\n\nPlease proceed to the next page to enter the desired values.', None, 0, 2)
+app.addMessage('mess', 'This program generates a random TSP and solves it using different heuristics. The results of the heuristics are compared with an optimal solver solution.\nYou will be asked to define the number of nodes that should be generated and for the range of the coordinates in which the nodes are created.\n\nIncluded heuristics are:\n- MST Heuristic\n- Multi-Fragment\n- Nearest Neighbour\n- Nearest Insertion\n- Cheapest Insertion\n\nPlease proceed to the next page to enter the desired values.', None, 0, 2)
 app.stopPage()
 
 #create 2nd page
