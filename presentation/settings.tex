@@ -1,0 +1,50 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{CambridgeUS}      % or try Darmstadt, Madrid, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{listings}
+\usepackage[ampersand]{easylist}
+
+
+
+\definecolor{KTI_green}{RGB}{150, 189, 13}
+\definecolor{TU_red}{RGB}{255, 55, 81}
+\definecolor{faint_gray}{RGB}{180, 180, 180}
+
+\definecolor{syntax_green}{rgb}{0,0.6,0}
+\definecolor{syntax_gray}{rgb}{0.9, 0.9, 0.9}
+\definecolor{syntax_mauve}{rgb}{0.58,0,0.82}
+
+\lstset{ 
+  backgroundcolor=\color{syntax_gray},  % choose the background color
+  basicstyle=\scriptsize\ttfamily,        		% size of fonts used for the code
+  breaklines=false,                		% automatic line breaking only at whitespace
+  captionpos=b,                    		% sets the caption-position to bottom
+  commentstyle=\color{syntax_green},    % comment style
+  escapeinside={\%*}{*)},          		% if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       		% keyword style
+  stringstyle=\color{syntax_mauve},     % string literal style
+  columns=fullflexible,
+  frame=single,
+  framesep=0.5cm,
+  framexleftmargin=0.5cm,
+  xleftmargin=0.5cm,
+  framexrightmargin=0.5cm,
+  xrightmargin=0.5cm,
+  frame=tb,                 
+    numbers=left,                    
+    numbersep=15pt,  
+  }
+  
+  
+\newcommand{\logopython}{\raggedleft \includegraphics[height=0.5cm]{logo_python}\hspace{0.1cm}\\\raggedright}
+\newcommand{\logopythonbottom}{\raggedleft\vspace{-0.8cm}\includegraphics[height=0.5cm]{logo_python}\hspace*{0.05cm}\\\raggedright}

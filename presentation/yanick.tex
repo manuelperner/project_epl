@@ -1,0 +1,30 @@
+	\begin{frame}{Optimale Tour}
+	\begin{itemize}
+	\item 4 Varianten implementiert:
+    \begin{enumerate}
+    \item Concorde - TSP Solver \footnote[frame] {\scriptsize\url{http://www.math.uwaterloo.ca/tsp/concorde/}}
+    \item Gurobi - Kommerzieller ILP Solver \footnote[frame] {\scriptsize\url{http://www.gurobi.com/}}
+    \item COIN OR - Open Source ILP Solver \footnote[frame] {\scriptsize\url{https://www.coin-or.org}}
+    \item lpsolve \footnote[frame] {\scriptsize\url{https://sourceforge.net/projects/lpsolve}}
+    \end{enumerate}
+	\end{itemize}
+    \begin{itemize}
+    	\item Ermöglicht den Qualitätsvergleich der Heuristiken mit der Optimallösung
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Geschwindigkeitsvergleich Concorde vs. Gurobi}
+\begin{center}
+\hspace*{-1cm}%
+\includegraphics[width=\dimexpr\textwidth+2cm\relax]{speed_figure_3.png}%
+\hspace*{-1cm}%
+\end{center}
+\end{frame}
+
+\begin{frame}{Geschwindigkeitsvergleich Gurobi vs. COIN}
+\begin{center}
+\hspace*{-1cm}%
+\includegraphics[width=\dimexpr\textwidth+2cm\relax]{speed_figure_4.png}%
+\hspace*{-1cm}%
+\end{center}
+\end{frame}
