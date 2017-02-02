@@ -3,15 +3,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sys
 import random
+import json
 
 import tsp_heuristics as heur
 import tsp_optimal as opt
 from lib import generate_points, calculate_distance_matrix, print_route
 
-MIN_INSTANCE_SIZE = 4
-MAX_INSTANCE_SIZE = 20
-STEP = 2
-SIMULATIONS = 5
+MIN_INSTANCE_SIZE = 5
+MAX_INSTANCE_SIZE = 40
+STEP = 5
+SIMULATIONS = 50
+
+SIM_FILENAME = str(datetime.now()).replace(' ', '_') + '.json'
+
+def append_data_to_sim_file(filename, data):
+    with open(filename, 'a') as f:
+        f.write(json.dumps(data, sort_keys=True, indent=None))
+        f.write('\n')
 
 def main():
     data = []
@@ -35,14 +43,17 @@ def main():
             #time, route = test_algorithm(matrix, point_list, 'nearest_neighbour')
             #sim_data['nearest_neighbour_time'].append(time)
             
-            time, route = test_algorithm(matrix, point_list, 'optimal_concorde')
-            sim_data['optimal_concorde_time'].append(time)
+            conc_time, route = test_algorithm(matrix, point_list, 'optimal_concorde')
+            sim_data['optimal_concorde_time'].append(conc_time)
             
-            time, route = test_algorithm(matrix, point_list, 'optimal_gurobi')
-            sim_data['optimal_gurobi_time'].append(time)
+            gur_time, route = test_algorithm(matrix, point_list, 'optimal_gurobi')
+            sim_data['optimal_gurobi_time'].append(gur_time)
             
-            time, route = test_algorithm(matrix, point_list, 'optimal_coin')
-            sim_data['optimal_coin_time'].append(time)
+            coin_time, route = test_algorithm(matrix, point_list, 'optimal_coin')
+            sim_data['optimal_coin_time'].append(coin_time)
+            
+            act_data = {'size' : instance_size, 'conc_time' : conc_time, 'gur_time' : gur_time, 'coin_time' : coin_time, 'time' : str(datetime.now())}
+            append_data_to_sim_file(SIM_FILENAME, act_data)
             
         data.append(sim_data)
     
